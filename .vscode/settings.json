@@ -1,0 +1,8 @@
+{
+    "python.linting.pylintArgs": [ 
+        "--disable=C,R,W",
+        "--load-plugins",
+        "--errors-only",
+	    "--disable=E0401"
+    ]
+}

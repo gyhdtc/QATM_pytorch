@@ -187,9 +187,10 @@ class QATM():
 
 # ## SINGLE
 
-def nms(score, w_ini, h_ini, thresh=0.7):
+def nms(a, w_ini, h_ini, thresh=0.7):
+    score = a[0]
     dots = np.array(np.where(score > thresh*score.max()))
-    
+    print(dots.shape)
     x1 = dots[1] - w_ini//2
     x2 = x1 + w_ini
     y1 = dots[0] - h_ini//2
@@ -241,7 +242,8 @@ def nms_multi(scores, w_array, h_array, thresh_list):
     indices_omit = indices[maxes > 0.1 * maxes.max()]
     # extract candidate pixels from scores
     dots = None
-    dos_indices = None
+    dots_indices = None
+    
     for index, score in zip(indices_omit, scores_omit):
         dot = np.array(np.where(score > thresh_list[index]*score.max()))
         if dots is None:
@@ -250,6 +252,7 @@ def nms_multi(scores, w_array, h_array, thresh_list):
         else:
             dots = np.concatenate([dots, dot], axis=1)
             dots_indices = np.concatenate([dots_indices, np.ones(dot.shape[-1]) * index], axis=0)
+
     dots_indices = dots_indices.astype(np.int)
     x1 = dots[1] - w_array[dots_indices]//2
     x2 = x1 + w_array[dots_indices]
@@ -296,7 +299,7 @@ def plot_result_multi(image_raw, boxes, indices, show=False, save_name=None, col
     if show:
         plt.imshow(d_img)
     if save_name:
-        cv2.imwrite(save_name, d_img[:,:,::-1])
+        cv2.imwrite("result/"+save_name, d_img[:,:,::-1])
     return d_img
 
 
@@ -323,19 +326,19 @@ def run_one_sample(model, template, image, image_name):
         scores.append(score)
     return np.array(scores)
 
-
 def run_multi_sample(model, dataset):
     scores = []
     w_array = []
     h_array = []
     thresh_list = []
     for data in dataset:
+        
         score = run_one_sample(model, data['template'], data['image'], data['image_name'])
         scores.append(score)
 
         w_array.append(data['template_w'])
         h_array.append(data['template_h'])
-        thresh_list.append(data['thresh'])
+        thresh_list.append(0.8)
     return np.squeeze(np.array(scores), axis=1), np.array(w_array), np.array(h_array), thresh_list
 
 

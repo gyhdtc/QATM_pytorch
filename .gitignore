@@ -5,3 +5,7 @@ template_private/
 result*
 thresh_template_private.csv
 make_csv.*
+handsample/
+handtemplate/
+模板/
+视频/

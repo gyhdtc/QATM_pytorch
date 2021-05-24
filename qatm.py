@@ -159,7 +159,7 @@ def GYH(image_index, image_name, global_lock_1, global_lock_2):
             score = run_one_sample(model, dataset[0]['template'], dataset[0]['image'], dataset[0]['image_name'])
             w_array = dataset[0]['template_w']
             h_array = dataset[0]['template_h']
-            
+
             boxes = nms(score, w_array, h_array, thresh)
 
             _ = plot_result(dataset[0]['image_raw'], boxes, show=False, save_name="result-"+str(image_index.value)+".png", color=(0,255,0))

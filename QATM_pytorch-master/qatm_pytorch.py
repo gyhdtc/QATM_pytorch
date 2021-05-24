@@ -64,7 +64,7 @@ class ImageDataset(torch.utils.data.Dataset):
     def __len__(self):
         # 获得模板数量
         return len(self.template_names)
-    
+
     def __getitem__(self, idx):
         template_path = str(self.template_path[idx])
         template = cv2.imread(template_path)

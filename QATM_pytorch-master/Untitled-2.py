@@ -45,7 +45,6 @@ if __name__ == '__main__':
         font=cv2.FONT_HERSHEY_SIMPLEX 
         # 加减10是调整字符位置 
         cv2.putText(Img,str(X+W/2)+str(',')+str(Y+H/2),(X-10,Y+10), font, 1,(0,0,255),2) 
-            
         print('黄色方块的数量是',p,'个') # 终端输出目标数量 
         # cv2.imshow('target', target) 
         # cv2.imshow('Mask', mask) 

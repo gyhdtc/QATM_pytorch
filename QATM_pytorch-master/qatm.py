@@ -38,10 +38,8 @@ if __name__ == '__main__':
     
     template_dir = args.template_images_dir
     image_path = args.sample_image
-    print(template_dir)
-    print(image_path)
     dataset = ImageDataset(Path(template_dir), image_path, thresh_csv='thresh_template.csv')
-     
+
     print("define model...")
     model = CreateModel(model=models.vgg19(pretrained=True).features, alpha=args.alpha, use_cuda=args.cuda)
     print("calculate score...")

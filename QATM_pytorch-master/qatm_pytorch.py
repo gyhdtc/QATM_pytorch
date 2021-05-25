@@ -37,6 +37,7 @@ class ImageDataset(torch.utils.data.Dataset):
         # convert a PIL image to tensor (H*W*C) in range [0,255] to a torch.Tensor(C*H*W) in the range [0.0,1.0]
         # https://zhuanlan.zhihu.com/p/130985895
         # 转换成一个 4 维向量，表示 1 个 3 张二维向量，表示图片的三个通道
+        # 归一化图片
         if not self.transform:
             self.transform = transforms.Compose([
                 transforms.ToTensor(),
@@ -57,8 +58,10 @@ class ImageDataset(torch.utils.data.Dataset):
         if thresh_csv:
         # 默认的是每张模板图片，和每个图片对应的阈值
             self.thresh_df = pd.read_csv(thresh_csv)
-            
+        # 归一化 源图片
         if self.transform:
+            # unsqueeze 作用：unsqueeze()这个函数主要是对数据维度进行扩充。
+            # 给指定位置加上维数为一的维度，比如原本有个三行的数据（3），unsqueeze(0)后就会在0的位置加了一维就变成一行三列（1,3）。
             self.image = self.transform(self.image_raw).unsqueeze(0)
         
     def __len__(self):
@@ -66,10 +69,14 @@ class ImageDataset(torch.utils.data.Dataset):
         return len(self.template_names)
 
     def __getitem__(self, idx):
+        # 获得一个序号 idx
         template_path = str(self.template_path[idx])
+        # 访问这个序号表示的模板图片
         template = cv2.imread(template_path)
+        # 归一化模板图片
         if self.transform:
             template = self.transform(template)
+        # 设定 阈值
         thresh = 0.7
         if self.thresh_df is not None:
             if self.thresh_df.path.isin([template_path]).sum() > 0:
@@ -82,7 +89,6 @@ class ImageDataset(torch.utils.data.Dataset):
                     'template_h': template.size()[-2], # 高
                    'template_w': template.size()[-1],  # 宽
                    'thresh': thresh}
-
 
 template_dir = 'template/'
 image_path = 'sample/sample1.jpg'
